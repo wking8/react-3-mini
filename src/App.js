@@ -29,7 +29,18 @@ class App extends Component {
   }
 
   getVehicles() {
-    // axios (GET)
+    // prmise is filled
+    axios.get('https://joes-autos.herokuapp.com/api/vehicles')
+      .then((results) => {
+        console.log(results.data)
+        this.setState({
+          vehiclesToDisplay: results.data
+        })
+        toast.success('Successfully fetched all vehicles')
+      })
+      .catch(() => {
+        toast.error('failed to fetch all the vehicles')
+      })
     // setState with response -> vehiclesToDisplay
   }
 
@@ -40,7 +51,17 @@ class App extends Component {
 
   sellCar(id) {
     // axios (DELETE)
+    axios.delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`)
     // setState with response -> vehiclesToDisplay
+    .then(res => {
+      this.setState({
+        vehiclesToDisplay: res.data.vehicles
+      })
+      toast.success('SOLD!')
+    })
+    .catch(() => {
+      toast.error('Failed to Sell')
+    })
   }
 
   filterByMake() {
@@ -59,7 +80,17 @@ class App extends Component {
 
   updatePrice(priceChange, id) {
     // axios (PUT)
-    // setState with response -> vehiclesToDisplay
+    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`)
+      // setState with response -> vehiclesToDisplay
+      .then((results) => {
+        toast.success('Price Updated')
+        this.setState({
+          vehiclesToDisplay: results.data.vehicles
+        })
+      })
+      .catch(() => {
+        toast.error('Failed to Update Price')
+      })
   }
 
   addCar() {
@@ -71,8 +102,19 @@ class App extends Component {
       price: this.price.value
     };
 
-    // axios (POST)
+    // axios (POST)  BODY IS ALWAYS AN OBJECT and REQUIRED AND SECOND PARAMETER
+    axios.post('https://joes-autos.herokuapp.com/api/vehicles', newCar)
     // setState with response -> vehiclesToDisplay
+    .then(res =>  {
+      // console.log(res)
+      this.setState({
+        vehiclesToDisplay: res.data.vehicles
+      })
+      toast.success('Successfully Added Vehicle')
+    })
+    .catch(() => {
+      toast.error('Failed to Add Vehicle')
+    })
   }
 
   addBuyer() {
